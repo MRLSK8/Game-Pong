@@ -2,10 +2,10 @@ var canvas;
 var canvasContext;
 
 var ballX = 40;
-var ballSpeedX = 5;
+var ballSpeedX = 10;
 
 var ballY = 40;
-var ballSpeedY = 2;
+var ballSpeedY = 5;
 
 var paddle1Y = 250;
 var paddle2Y = 250;
@@ -75,20 +75,30 @@ function colorRect(leftX, topY, width, height, drawColor){
     canvasContext.fillRect(leftX, topY, width, height);
 }
 
+function computerMovement(){
+    var paddle2YCenter = paddle2Y + (PADDLE_HEIGHT / 2);
+
+    if(paddle2YCenter < (ballY - 35)){
+        paddle2Y += 6;
+    }else if(paddle2YCenter > (ballY + 35)){
+        paddle2Y -= 6;
+    }
+}
+
 function moveEverything(){
+    computerMovement();
+
     ballX += ballSpeedX;
     ballY += ballSpeedY;
 
     if(ballX >= (canvas.width - PADDLE_THICKNESS)){
         if (ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
-            ballSpeedX += 1;
             ballSpeedX = -ballSpeedX;
         } else {
             ballReset();
         }
     }else if(ballX <= PADDLE_THICKNESS){
         if(ballY > paddle1Y && ballY < (paddle1Y + PADDLE_HEIGHT)){
-            ballSpeedX -= 1;
             ballSpeedX = -ballSpeedX;
         }else{
             ballReset();
@@ -96,10 +106,8 @@ function moveEverything(){
     }
 
     if(ballY >= canvas.height){
-        ballSpeedY += 1;
         ballSpeedY = -ballSpeedY;
     }else if(ballY <= 0){
-        ballSpeedY -= 1;
         ballSpeedY = -ballSpeedY;
     }
 }
