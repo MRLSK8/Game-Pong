@@ -76,6 +76,12 @@ function score(score, posX){
     canvasContext.fillText("Score: " + score, posX, 50);
 }
 
+function drawNet(){
+    for(var i = 10; i < canvas.height; i+=40){
+        colorRect(canvas.width/2 - 1, i, 2, 20, "white");
+    }
+}
+
 function drawEverything(){
     
     // Draws the background
@@ -93,6 +99,8 @@ function drawEverything(){
         canvasContext.fillText("Click to continue", 500, 100);        
         return;
     }
+
+    drawNet();
 
     // This is the left player paddle
     colorRect(0, paddle1Y, PADDLE_THICKNESS, PADDLE_HEIGHT, "white");
