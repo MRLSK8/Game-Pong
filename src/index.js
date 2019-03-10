@@ -8,8 +8,10 @@ var ballY = 40;
 var ballSpeedY = 2;
 
 var paddle1Y = 250;
+var paddle2Y = 250;
 
 const PADDLE_HEIGHT = 100;
+const PADDLE_THICKNESS = 6;
 
 window.onload = () => {
     canvas = document.getElementById("gameCanvas");
@@ -28,10 +30,16 @@ window.onload = () => {
     });
 }
 
+function ballReset(){
+    ballSpeedX = -ballSpeedX;
+    ballX = canvas.width/2;
+    ballY = canvas.height/2;
+}
+
 function calculateMousePosition(event){
     var rect = canvas.getBoundingClientRect();
     var root = document.documentElement;
-    
+
     var mouseX = event.clientX - rect.left - root.scrollLeft;
     var mouseY = event.clientY - rect.top - root.scrollTop;
 
@@ -46,7 +54,10 @@ function drawEverything(){
     colorRect(0, 0, canvas.width, canvas.height, "black");
 
     // This is the left player paddle
-    colorRect(1, paddle1Y, 5, PADDLE_HEIGHT, "white");
+    colorRect(0, paddle1Y, PADDLE_THICKNESS, PADDLE_HEIGHT, "white");
+
+    // This is the right computer paddle
+    colorRect(canvas.width - PADDLE_THICKNESS, paddle2Y, PADDLE_THICKNESS, PADDLE_HEIGHT, "white");
 
     // Draws the ball
     colorCircle(ballX, ballY, 7, "white");
@@ -68,18 +79,26 @@ function moveEverything(){
     ballX += ballSpeedX;
     ballY += ballSpeedY;
 
-    if(ballX >= (canvas.width - 15)){
-        ballSpeedX += 1;
-        ballSpeedX = -ballSpeedX;
-    }else if(ballX <= 15){
-        ballSpeedX -= 1;
-        ballSpeedX = -ballSpeedX;
+    if(ballX >= (canvas.width - PADDLE_THICKNESS)){
+        if (ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
+            ballSpeedX += 1;
+            ballSpeedX = -ballSpeedX;
+        } else {
+            ballReset();
+        }
+    }else if(ballX <= PADDLE_THICKNESS){
+        if(ballY > paddle1Y && ballY < (paddle1Y + PADDLE_HEIGHT)){
+            ballSpeedX -= 1;
+            ballSpeedX = -ballSpeedX;
+        }else{
+            ballReset();
+        }
     }
 
-    if(ballY >= (canvas.height - 10)){
+    if(ballY >= canvas.height){
         ballSpeedY += 1;
         ballSpeedY = -ballSpeedY;
-    }else if(ballY <= 10){
+    }else if(ballY <= 0){
         ballSpeedY -= 1;
         ballSpeedY = -ballSpeedY;
     }
