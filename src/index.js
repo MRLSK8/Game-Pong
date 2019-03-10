@@ -2,13 +2,16 @@ var canvas;
 var canvasContext;
 
 var ballX = 40;
-var ballSpeedX = 10;
+var ballSpeedX = 40;
 
 var ballY = 40;
-var ballSpeedY = 5;
+var ballSpeedY = 6;
 
 var paddle1Y = 250;
 var paddle2Y = 250;
+
+var player1Score = 0;
+var player2Score = 0;
 
 const PADDLE_HEIGHT = 100;
 const PADDLE_THICKNESS = 6;
@@ -49,6 +52,10 @@ function calculateMousePosition(event){
     };
 }
 
+function score(score, posX){
+    canvasContext.fillText("Score: " + score, posX, 50);
+}
+
 function drawEverything(){
     // Draws the background
     colorRect(0, 0, canvas.width, canvas.height, "black");
@@ -61,6 +68,9 @@ function drawEverything(){
 
     // Draws the ball
     colorCircle(ballX, ballY, 7, "white");
+
+    score(player1Score, 100);
+    score(player2Score, canvas.width - 200);
 }
 
 function colorCircle(centerX, centerY, radius, circleColor){
@@ -93,15 +103,23 @@ function moveEverything(){
 
     if(ballX >= (canvas.width - PADDLE_THICKNESS)){
         if (ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
+            if(ballSpeedX < 50){
+                ballSpeedX += 1;
+            }
             ballSpeedX = -ballSpeedX;
         } else {
             ballReset();
+            player1Score++;
         }
     }else if(ballX <= PADDLE_THICKNESS){
         if(ballY > paddle1Y && ballY < (paddle1Y + PADDLE_HEIGHT)){
+            if(ballSpeedX < 50){
+                ballSpeedX += 1;
+            }
             ballSpeedX = -ballSpeedX;
         }else{
             ballReset();
+            player2Score++;
         }
     }
 
